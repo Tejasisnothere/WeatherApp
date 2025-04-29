@@ -1,169 +1,182 @@
-<!DOCTYPE html>
-<html>
+    <!DOCTYPE html>
+    <html>
 
-<head>
-    <title>Weather app</title>
-    <link rel="stylesheet" href="/styles.css">
-</head>
+    <head>
+        <title>Weather app</title>
+        <link rel="stylesheet" href="/styles.css">
+    </head>
 
-<body>
-    <div class="background" id="background">
-        <div class="weathercard" id="weathercard">
-            <div class="cardtitle" id="cardtitle">
-                <div class="title">Weatherly</div>
-            </div>
-            <div class="cardbody">
-                <div class="latloncontainer">
-                    <form action="/submit" method="POST" id="weatherform">
-                        <div class="sublatloncontainer">
-                            <label for="lat" id="inputlabel">Lati</label>
-                            <input type="text" placeholder="19.07&deg;" name="lat" id="lat">
-                        </div>
-                        <div class="sublatloncontainer">
-
-                            <label for="lon" id="inputlabel">Lon</label>
-                            <input type="text" placeholder="72.87&deg;" name="lon" id="lon">
-                        </div>
-
-                        <div class="sublatloncontainer">
-                            <button id="subbtn" type="submit">Enter</button>
-                        </div>
-                    </form>
-                    <div class="tempcontainer">
-                        <div id="temp">
-
-                        </div>
-                        <div class="tempicon">
-
-                        </div>
-
-                    </div>
+    <body>
+        <div class="background" id="background">
+            <div class="weathercard" id="weathercard">
+                <div class="cardtitle" id="cardtitle">
+                    <div class="title">Weatherly</div>
                 </div>
-                <div class="iconcontainer">
-                    <div class="weathericon" id="weathericon" name="weathericon">
-                        <link rel="stylesheet"
-                            href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
-                        <i class="wi wi-day-sunny" id="1"></i>
-                        <i class="wi wi-cloudy" id="2"></i>
-                        <i class="wi wi-windy" id="3"></i>
-                        <i class="wi wi-rain" id="4"></i>
-                        <i class="wi wi-snow" id="5"></i>
+                <div class="cardbody">
+                    <div class="latloncontainer">
+                        <form action="/submit" method="POST" id="weatherform">
+                            <div class="sublatloncontainer">
+                                <label for="lat" id="inputlabel">Lati</label>
+                                <input type="text" placeholder="19.07&deg;" name="lat" id="lat">
+                            </div>
+                            <div class="sublatloncontainer">
 
+                                <label for="lon" id="inputlabel">Lon</label>
+                                <input type="text" placeholder="72.87&deg;" name="lon" id="lon">
+                            </div>
+
+                            <div class="sublatloncontainer">
+                                <button id="subbtn" type="submit">Enter</button>
+                            </div>
+                        </form>
+                        <div class="tempcontainer">
+                            <div id="temp">
+
+                            </div>
+                            <div class="tempicon">
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="iconcontainer">
+                        <div class="weathericon" id="weathericon" name="weathericon">
+                            <link rel="stylesheet"
+                                href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
+                            <i id="wicon"></i>
+
+                        </div>
+                        <div id="weatherdesc">
+
+                        </div>
+                        <div class="windcontainer">
+                            <div class="windicon">
+                            </div>
+                            <div id="winddesc">
+
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
 
 
-        let start = null;
-        let start2 = null;
+            let start = null;
+            let start2 = null;
 
-        function sigmoid(a) {
-            return 1 / (1 + Math.E ** a);
-        }
-
-        function mapRange(value, inMin, inMax, outMin, outMax) {
-            return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-        }
-
-        function animateCard(timestamp) {
-            if (!start) start = timestamp;
-            let progress = timestamp - start;
-
-            let card = document.getElementById("weathercard");
-            let delay = 800;
-
-            if (progress < delay) {
-                card.style.marginTop = delay + 50 - progress + "px";
-                card.style.opacity = mapRange(Math.E ** (progress / 100), 0, Math.E ** (delay / 100), 0, 1);
-            } else {
-                card.style.marginTop = "50px";
+            function sigmoid(a) {
+                return 1 / (1 + Math.E ** a);
             }
 
+            function mapRange(value, inMin, inMax, outMin, outMax) {
+                return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+            }
+
+            function animateCard(timestamp) {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+
+                let card = document.getElementById("weathercard");
+                let delay = 800;
+
+                if (progress < delay) {
+                    card.style.marginTop = delay + 50 - progress + "px";
+                    card.style.opacity = mapRange(Math.E ** (progress / 100), 0, Math.E ** (delay / 100), 0, 1);
+                } else {
+                    card.style.marginTop = "50px";
+                }
+
+                requestAnimationFrame(animateCard);
+            }
+
+            
             requestAnimationFrame(animateCard);
-        }
+            
 
-        function animateCardTitle(timestamp) {
-            let card = document.getElementById("cardtitle");
-            let delay = 1200;
+            async function getdata() {
 
-            if (progress < delay) {
-                card.style.marginTop = delay + progress + "px";
-                card.style.opacity = mapRange(Math.E ** (progress / 100), 0, Math.E ** (delay / 100), 0, 1);
-            } else {
-                card.style.marginTop = "50px";
+                const lat = document.getElementById("lat").value;
+                const lon = document.getElementById("lon").value;
+
+                try {
+                    const response = await axios.post('/submit', {
+                        lat: lat,
+                        lon: lon
+                    },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+
+                        });
+                    console.log(response);
+                    // showing temperature here
+                    let tempElement = document.getElementById("temp");
+                    tempElement.innerText = `${response.data.temp}°C`;
+                    tempElement.style.fontSize = '80px';
+                    tempElement.style.marginTop = '35px';
+                    tempElement.style.fontFamily = "'Mauline', sans-serif";
+                    tempElement.style.opacity = '0.7';
+                    tempElement.style.width = '130px';
+                    tempElement.style.marginLeft = '10px';
+                    tempElement.style.color = 'black';
+
+                    //returning icon according to the given id from my backend server
+
+                    let iconclass = getWeatherIconClass(response.data.id);
+                    let iconElement = document.getElementById("wicon");
+                    iconElement.className = iconclass;
+                    iconElement.style.fontSize=100+"px";
+                    iconElement.style.opacity=0.7;
+                    
+                    
+                    //weather description
+                    let desc = response.data.desc;
+                    let weatherdesc = document.getElementById("weatherdesc");
+                    weatherdesc.style.fontSize = 30 + "px";
+                    weatherdesc.style.fontFamily = 'Mauline';
+                    weatherdesc.innerText = desc;
+                  
+                    let wind = response.data.speed;
+                    document.getElementById("winddesc").innerText = wind+" kmph";
+                    
+
+                } catch (error) {
+                    console.error('Error', error);
+                    document.getElementById("temp").innerText = '..';
+                    // document.getElementById("wicon").innerText = '..';
+                    // document.getElementById("weatherdesc").innerText = "..";
+                }
             }
 
-            requestAnimationFrame(animateCardTitle);
-        }
-        requestAnimationFrame(animateCard);
-        requestAnimationFrame(animateCardTitle);
+            document.getElementById("weatherform").addEventListener("submit", (e) => {
+                e.preventDefault();
 
-        async function getdata() {
+                getdata();
+            });
 
-            const lat = document.getElementById("lat").value;
-            const lon = document.getElementById("lon").value;
-
-            try {
-                const response = await axios.post('/submit', {
-                    lat: lat,
-                    lon: lon
-                },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-
-                    });
-                console.log(response);
-                // showing temperature here
-                let tempElement = document.getElementById("temp");
-                tempElement.innerText = `${response.data.temp}°C`;
-                tempElement.style.fontSize = '80px';
-                tempElement.style.marginTop = '35px';
-                tempElement.style.fontFamily = "'Mauline', sans-serif";
-                tempElement.style.opacity = '0.7';
-                tempElement.style.width = '130px';
-                tempElement.style.marginLeft = '10px';
-                tempElement.style.color = 'black';
-
-                //returning icon according to the given id from my backend server
-
-                let iconclass = getWeatherIconClass(response.id);
-                
-            } catch (error) {
-                console.error('Error', error);
-                document.getElementById("temp").innerText = '..';
+            function getWeatherIconClass(id) {
+                if (id >= 200 && id < 600) {
+                    return "wi wi-rain";
+                } else if (id >= 600 && id < 700) {
+                    return "wi wi-snow";
+                } else if (id >= 700 && id < 800) {
+                    return "wi wi-windy";
+                } else if (id === 800) {
+                    return "wi wi-day-sunny";
+                } else if (id > 800 && id < 900) {
+                    return "wi wi-cloudy";
+                } else {
+                    return "wi wi-na";
+                }
             }
-        }
 
-        document.getElementById("weatherform").addEventListener("submit", (e) => {
-            e.preventDefault();
+        </script>
+    </body>
 
-            getdata();
-        });
-
-        function getWeatherIconClass(id) {
-            if (id >= 200 && id < 600) {
-                return "wi wi-rain"; 
-            } else if (id >= 600 && id < 700) {
-                return "wi wi-snow";
-            } else if (id >= 700 && id < 800) {
-                return "wi wi-windy"; 
-            } else if (id === 800) {
-                return "wi wi-day-sunny"; 
-            } else if (id > 800 && id < 900) {
-                return "wi wi-cloudy"; 
-            } else {
-                return "wi wi-na"; 
-            }
-        }
-
-    </script>
-</body>
-
-</html>
+    </html>
