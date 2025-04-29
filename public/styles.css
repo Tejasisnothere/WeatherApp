@@ -4,11 +4,12 @@ body {
     height: 100vh;
     margin: 0;
 }
+
 @font-face {
     font-family: 'Mauline';
     src: url('./fonts/Mauline.otf') format('truetype');
-  }
-  
+}
+
 
 body::before {
     content: "";
@@ -41,37 +42,112 @@ body::before {
 }
 
 
-.title{
+.title {
     color: antiquewhite;
     font-size: 60px;
     margin-left: 130px;
     font-family: 'Mauline', sans-serif;
 }
 
-.cardbody{
+.cardbody {
     display: flex;
 
 }
 
-.latloncontainer{
-    width: 250px;
+.form{
+    height: 200px   ;
 }
-  
-input{
+.latloncontainer {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+#inputlabel {
+    font-size: 30px;
+    margin-right: 20px;
+    font-family: 'Mauline', sans-serif;
+    opacity: 0.8;
+    pointer-events: none;
+    
+}
+
+input {
     height: 50px;
+    width: 200px;
     opacity: 0.8;
     border-radius: 20px;
-    border:none;
+    border: none;
     margin-top: 20px;
-    
-
+    font-size: 20px;
 }
 
-input[type="text"]:hover{
-    display: block;
+input[type="text"]:hover {
+    transition:transform ease-in 0.2s;
     cursor: pointer;
+    transform: translate3d(0px, -5px, 0px);
+    box-shadow: 2px 5px 1px black;
 }
 
-input:focus{
-    outline :none;
+input[type="text"]::placeholder{
+    font-size: 20px;   
+    color: rgb(164, 163, 163);
+    margin-left: 20px;   
+}
+
+input:focus {
+    outline: none;
+    
+}
+
+#subbtn {
+    height: 50px;
+    width: 200px;
+    margin-top: 20px;
+    margin-left: 65px;
+    border-radius: 20px;
+    border: none;
+    background-color: #fff5a8;
+    color: white;
+    font-size: 20px;
+    font-family: 'Mauline', sans-serif;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: transform 0.2s ease-in;
+}
+
+#subbtn:hover {
+    transform: translateY(-5px);
+    box-shadow: 2px 5px 1px black;
+}
+
+.tempcontainer{
+    display: flex;
+    flex-direction: row;
+}
+
+.tempicon{
+    background-image: url("temp.png");
+    background-size: cover;       
+    background-repeat: no-repeat; 
+    background-position: center;
+    height: 150px;
+    width: 150px;
+    opacity: 0.8;
+}
+
+.temp{
+    font-size: 80px;
+    margin-top: 35px;
+    font-family: 'Mauline', sans-serif;
+    opacity: 0.7;
+    width: 130px;
+    margin-left: 10px;
+    color: black;
+
+}
+
+.temp:hover{
+    cursor: default;
+
 }
