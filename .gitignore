@@ -1,0 +1,41 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+
+# macOS system files
+.DS_Store
+
+# IDE configurations
+.vscode/
+.idea/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+
+# Dependency locks
+package-lock.json
+yarn.lock
+
+# Minified files
+*.min.js
+*.min.css
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Test coverage files
+coverage/
+
+# Backup files
+*.swp
+*.bak

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Weather app</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <div class="background" id="background">
+        <div class="weathercard" id="weathercard">
+            <div class="cardtitle" id="cardtitle">
+                <label class="title">Weatherly</label>
+            </div>
+            <div class="cardbody">
+                <div class="latloncontainer">
+                    <form action="/submit">
+                        <label for="lat" id="">Lat</label>
+                        <input type="text" name="lat" id="lat">
+                        <label for="lon">Lon</label>
+                        <input type="text" name="lon" id="lon">
+                    </form>
+                </div>
+                <div class="iconcontainer">
+                    <div class="weathericon" id="weathericon" name="weathericon"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let start = null;
+        let start2 = null;
+
+        function sigmoid(a) {
+            return 1 / (1 + Math.E ** a);
+        }
+
+        function mapRange(value, inMin, inMax, outMin, outMax) {
+            return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+        }
+
+        function animateCard(timestamp) {
+            if (!start) start = timestamp;
+            let progress = timestamp - start;
+
+            let card = document.getElementById("weathercard");
+            let delay = 800;
+
+            if (progress < delay) {
+                card.style.marginTop = delay + 50 - progress + "px";
+                card.style.opacity = mapRange(Math.E ** (progress / 100), 0, Math.E ** (delay / 100), 0, 1);
+            } else {
+                card.style.marginTop = "50px";
+            }
+
+            requestAnimationFrame(animateCard);
+        }
+
+        function animateCardTitle(timestamp) {
+            let card = document.getElementById("cardtitle");
+            let delay = 1200;
+
+            if (progress < delay) {
+                card.style.marginTop = delay + progress + "px";
+                card.style.opacity = mapRange(Math.E ** (progress / 100), 0, Math.E ** (delay / 100), 0, 1);
+            } else {
+                card.style.marginTop = "50px";
+            }
+
+            requestAnimationFrame(animateCardTitle); 
+        }
+        requestAnimationFrame(animateCard);
+        requestAnimationFrame(animateCardTitle);
+
+    </script>
+</body>
+
+</html>
